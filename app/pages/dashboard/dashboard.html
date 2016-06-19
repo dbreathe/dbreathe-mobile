@@ -1,0 +1,30 @@
+<ion-navbar *navbar>
+  <button menuToggle>
+    <ion-icon name="menu"></ion-icon>
+  </button>
+  <ion-title>Dashboard</ion-title>
+</ion-navbar>
+
+<ion-content class="dashboard">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <base-chart class="chart"
+            [datasets]="ketoneChartData"
+            [labels]="ketoneChartLabels"
+            [colors]="ketoneChartColours"
+            [options]="lineChartOptions"
+            [legend]="lineChartLegend"
+            [chartType]="lineChartType"></base-chart>
+      </ion-col>
+      <ion-col>
+        <base-chart class="chart"
+            [datasets]="tempretureChartData"
+            [labels]="tempretureChartLabels"
+            [options]="lineChartOptions"
+            [legend]="lineChartLegend"
+            [chartType]="lineChartType"></base-chart>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
