@@ -13,22 +13,20 @@ export class DashboardPage {
   public ketoneChartData: Array<any> = [
     { data: [], label: 'Ketones (mmol/L)' }
   ];
-  public ketoneChartLabels: Array<any> = [];
-  public ketoneChartColours: Array<any> = [
-    {
-      backgroundColor: 'rgba(148,159,177,0.2)',
-      borderColor: 'rgba(148,159,177,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    }
+  public ketoneChartColours: Array<any> = [];
+  public ketonePpmChartData: Array<any> = [
+    { data: [], label: 'Ketones (PPM)' }
   ];
-  public tempretureChartData: Array<any> = [
-    { data: [], label: 'Tempreture (°C)' },
+  public ketonePpmChartColours: Array<any> = [];
+  public temperatureChartData: Array<any> = [
+    { data: [], label: 'Temperature (°C)' }
+  ];
+  public temperatureChartColours: Array<any> = [];
+  public humidityChartData: Array<any> = [
     { data: [], label: 'Humidity (%)' }
   ];
-  public tempretureChartLabels: Array<any> = [];
+  public humidityChartColours: Array<any> = [];
+  public lineChartLabels: Array<any> = [];
   public lineChartOptions: any = {
     animation: false,
     responsive: true,
@@ -36,6 +34,11 @@ export class DashboardPage {
       xAxes: [{
         ticks: {
           display: false
+        }
+      }],
+      yAxes: [{
+        ticks: {
+          beginAtZero: true
         }
       }]
     }
@@ -45,12 +48,17 @@ export class DashboardPage {
 
   constructor(private zone: NgZone, private sensors: SensorService) {
     for (let i = 0; i < X_VALUES; i++) {
-      this.ketoneChartData[0].data.push(0);
-      this.ketoneChartLabels.push('');
+      this.ketoneChartColours = this.getColours(['#34495e']);
+      this.ketonePpmChartColours = this.getColours(['#2ecc71']);
+      this.temperatureChartColours = this.getColours(['#e74c3c']);
+      this.humidityChartColours = this.getColours(['#3498db']);
 
-      this.tempretureChartData[0].data.push(0);
-      this.tempretureChartData[1].data.push(0);
-      this.tempretureChartLabels.push('');
+      this.ketoneChartData[0].data.push(0);
+      this.ketonePpmChartData[0].data.push(0);
+      this.temperatureChartData[0].data.push(0);
+      this.humidityChartData[0].data.push(0);
+
+      this.lineChartLabels.push('');
     }
 
     sensors.addListener((data: string) => this.onDataReceived(data));
@@ -64,33 +72,83 @@ export class DashboardPage {
       return;
     }
 
-    const [mmol, ppmf, raw, humidity, tempreture] = values;
+    const [mmol, ppmf, raw, humidity, temperature] = values;
 
-    const [ketonesDataset] = this.ketoneChartData;
-    const [tempretureDataset, humidtyDataset] = this.tempretureChartData;
+    const [ketoneDataset] = this.ketoneChartData;
+    const [ketonePpmDataset] = this.ketonePpmChartData;
+    const [temperatureDataset] = this.temperatureChartData;
+    const [humidityDataset] = this.humidityChartData;
 
-    let _keytonesData = ketonesDataset.data.slice();
+    let _ketoneData = ketoneDataset.data.slice();
 
-    _keytonesData.unshift(mmol);
-    _keytonesData.pop();
+    _ketoneData.unshift(mmol);
+    _ketoneData.pop();
 
-    let _tempretureData = tempretureDataset.data.slice();
+    let _ketonePpmData = ketonePpmDataset.data.slice();
 
-    _tempretureData.unshift(tempreture);
-    _tempretureData.pop();
+    _ketonePpmData.unshift(ppmf);
+    _ketonePpmData.pop();
 
-    let _humidityData = humidtyDataset.data.slice();
+    let _temperatureData = temperatureDataset.data.slice();
+
+    _temperatureData.unshift(temperature);
+    _temperatureData.pop();
+
+    let _humidityData = humidityDataset.data.slice();
 
     _humidityData.unshift(humidity);
     _humidityData.pop();
 
     this.ketoneChartData = [
-      { data: _keytonesData, label: ketonesDataset.label }
+      { data: _ketoneData, label: ketoneDataset.label }
     ];
 
-    this.tempretureChartData = [
-      { data: _tempretureData, label: tempretureDataset.label },
-      { data: _humidityData, label: humidtyDataset.label }
+    this.ketonePpmChartData = [
+      { data: _ketonePpmData, label: ketonePpmDataset.label }
     ];
+
+    this.temperatureChartData = [
+      { data: _temperatureData, label: temperatureDataset.label }
+    ];
+
+    this.humidityChartData = [
+      { data: _humidityData, label: humidityDataset.label }
+    ];
+  }
+
+  rgba(colour, alpha) {
+    return 'rgba(' + colour.concat(alpha).join(',') + ')';
+  }
+
+  hexToRgb(hex) {
+    var bigint = parseInt(hex.substr(1), 16),
+      r = (bigint >> 16) & 255,
+      g = (bigint >> 8) & 255,
+      b = bigint & 255;
+
+    return [r, g, b];
+  }
+
+  getColour(colour) {
+    return {
+      backgroundColor: this.rgba(colour, 0.2),
+      borderColor: this.rgba(colour, 1),
+      pointBackgroundColor: this.rgba(colour, 1),
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: this.rgba(colour, 0.8)
+    };
+  }
+
+  getColours(colours) {
+    let _clrs = [];
+
+    colours.forEach(
+      color => {
+        _clrs.push(this.getColour(this.hexToRgb(color)));
+      }
+    );
+
+    return _clrs;
   }
 }

@@ -11,7 +11,7 @@
       <ion-col>
         <base-chart class="chart"
             [datasets]="ketoneChartData"
-            [labels]="ketoneChartLabels"
+            [labels]="lineChartLabels"
             [colors]="ketoneChartColours"
             [options]="lineChartOptions"
             [legend]="lineChartLegend"
@@ -19,8 +19,29 @@
       </ion-col>
       <ion-col>
         <base-chart class="chart"
-            [datasets]="tempretureChartData"
-            [labels]="tempretureChartLabels"
+            [datasets]="temperatureChartData"
+            [labels]="lineChartLabels"
+            [colors]="temperatureChartColours"
+            [options]="lineChartOptions"
+            [legend]="lineChartLegend"
+            [chartType]="lineChartType"></base-chart>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <base-chart class="chart"
+            [datasets]="ketonePpmChartData"
+            [labels]="lineChartLabels"
+            [colors]="ketonePpmChartColours"
+            [options]="lineChartOptions"
+            [legend]="lineChartLegend"
+            [chartType]="lineChartType"></base-chart>
+      </ion-col>
+      <ion-col>
+        <base-chart class="chart"
+            [datasets]="humidityChartData"
+            [labels]="lineChartLabels"
+            [colors]="humidityChartColours"
             [options]="lineChartOptions"
             [legend]="lineChartLegend"
             [chartType]="lineChartType"></base-chart>
